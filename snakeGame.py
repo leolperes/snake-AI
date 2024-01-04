@@ -17,9 +17,10 @@ Point = namedtuple('Point', 'x,y')
 
 #colors
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+RED1 = (200, 0, 0)
+RED2 = (255, 0, 0)
 BLUE1 = (0, 0, 255)
-BLUE2 = (0, 100, 255)
+BLUE2 = (0, 50, 255)
 BLACK = (0, 0, 0)
 
 BLOCK_SIZE = 20
@@ -30,7 +31,7 @@ class SnakeGame:
         self.w = w
         self.h = h
         #init Display
-        self.display = pygame.display.set_mode((self.w, self.h))
+        self.display = pygame.display.set_mode((self.w, self.h+40))
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
 
@@ -111,10 +112,12 @@ class SnakeGame:
             pygame.draw.rect(self.display,BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
             pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
 
-        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, RED1, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, RED2, pygame.Rect(self.food.x+4, self.food.y+4, 12, 12))
 
-        text = font.render("Score: " + str(self.score), True, WHITE)
-        self.display.blit(text, [0, 0])
+        pygame.draw.rect(self.display, WHITE, pygame.Rect(0, self.h, self.w, 40))
+        text = font.render("Score: " + str(self.score), True, BLACK)
+        self.display.blit(text, [0, 485])
         pygame.display.flip()
 
     def _move(self, direction):
