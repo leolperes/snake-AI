@@ -3,6 +3,8 @@ import random
 import numpy as np
 from collections import deque
 from game import SnakeGameAI, Direction, Point
+from model import Linear_QNet, QTrainer
+from helper import plot
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
@@ -13,10 +15,10 @@ class Agent:
     def __init__(self):
         self.n_games = 0
         self.epsilon = 0 # ramdomness
-        self.gamma = 0 # discount rate
-        self.memory = deque(max_len = MAX_MEMORY) # popleft()
-        self.model = None # TODO
-        self,trainer = None # TODO
+        self.gamma = 0.9 # discount rate
+        self.memory = deque(maxlen=MAX_MEMORY) # popleft()
+        self.model = Linear_QNet(11, 256, 3)
+        self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     def get_state(self, game):
         head = game.snake[0]
@@ -32,22 +34,22 @@ class Agent:
 
         state = [
             # Danger Straight
-            (dir_r and game.is_colision(point_r)) or
-            (dir_l and game.is_colision(point_l)) or
-            (dir_u and game.is_colision(point_u)) or
-            (dir_d and game.is_colision(point_d)),
+            (dir_l and game.is_collision(point_l)) or
+            (dir_r and game.is_collision(point_r)) or
+            (dir_u and game.is_collision(point_u)) or
+            (dir_d and game.is_collision(point_d)),
 
             # Danger Left
-            (dir_r and game.is_colision(point_u)) or
-            (dir_l and game.is_colision(point_d)) or
-            (dir_u and game.is_colision(point_l)) or
-            (dir_d and game.is_colision(point_r)),
+            (dir_r and game.is_collision(point_u)) or
+            (dir_l and game.is_collision(point_d)) or
+            (dir_u and game.is_collision(point_l)) or
+            (dir_d and game.is_collision(point_r)),
 
             # Danger Left
-            (dir_r and game.is_colision(point_d)) or
-            (dir_l and game.is_colision(point_u)) or
-            (dir_u and game.is_colision(point_r)) or
-            (dir_d and game.is_colision(point_l)),
+            (dir_r and game.is_collision(point_d)) or
+            (dir_l and game.is_collision(point_u)) or
+            (dir_u and game.is_collision(point_r)) or
+            (dir_d and game.is_collision(point_l)),
 
             # Move direction
             dir_l,
@@ -87,7 +89,7 @@ class Agent:
             final_move[move] = 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
-            prediction = self.model.predict(state0)
+            prediction = self.model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
 
@@ -130,11 +132,15 @@ def train():
 
             if score > record:
                 record = score
-                # TODO: agent.model.save()
+                agent.model.save()
 
             print("Game: ", agent.n_games, "Score: ", score, "Record: ", record)
 
-            # TODO: ploting
+            plot_score.append(score)
+            total_score += score
+            mean_score = total_score / agent.n_games
+            plot_mean_score.append(mean_score)
+            plot(plot_score, plot_mean_score)
 
 
 

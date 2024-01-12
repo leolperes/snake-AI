@@ -32,7 +32,7 @@ BLUE2 = (0, 50, 255)
 BLACK = (0, 0, 0)
 
 BLOCK_SIZE = 20
-SPEED = 20
+SPEED = 50
 
 class SnakeGameAI:
     def __init__(self, w=640, h=480):
@@ -45,19 +45,19 @@ class SnakeGameAI:
         self.reset()
 
 
-        # Reset Function
-        def reset(self):
-            #init game state
-            self.direction = Direction.RIGHT
+    # Reset Function
+    def reset(self):
+        #init game state
+        self.direction = Direction.RIGHT
 
-            self.head = Point(self.w/2, self.h/2)
-            self.snake = [self.head,
-                        Point(self.head.x-BLOCK_SIZE, self.head.x-BLOCK_SIZE),
-                        Point(self.head.x-(2*BLOCK_SIZE), self.head.x-(2*BLOCK_SIZE))]
-            self.score = 0
-            self.food = None
-            self.__place__food()
-            self.frame_iteration = 0
+        self.head = Point(self.w/2, self.h/2)
+        self.snake = [self.head,
+                    Point(self.head.x-BLOCK_SIZE, self.head.x-BLOCK_SIZE),
+                    Point(self.head.x-(2*BLOCK_SIZE), self.head.x-(2*BLOCK_SIZE))]
+        self.score = 0
+        self.food = None
+        self.__place__food()
+        self.frame_iteration = 0
 
 
     def __place__food(self):
@@ -65,7 +65,7 @@ class SnakeGameAI:
         y = random.randint(0, (self.h-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE
         self.food = Point(x, y)
         if self.food in self.snake:
-            self._place_food()
+            self.__place__food()
 
     def play_step(self, action):
         
@@ -113,7 +113,7 @@ class SnakeGameAI:
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y >self.h - BLOCK_SIZE or pt.y < 0:
             return True
         #hit itself
-        if self.pt in self.snake[1:]:
+        if pt in self.snake[1:]:
             return True
         
         return False
