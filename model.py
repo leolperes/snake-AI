@@ -13,7 +13,7 @@ class Linear_QNet(nn.Module):
 
     def forward(self, x):
         x = F.relu(self.linear1(x))
-        x = F.relu(self.linear2(x))
+        x = self.linear2(x)
         return x
     
     def save(self, file_name='model.pth'):
@@ -22,7 +22,6 @@ class Linear_QNet(nn.Module):
             os.makedirs(model_folder_path)
         
         file_name = os.path.join(model_folder_path, file_name)
-
         torch.save(self.state_dict(), file_name)
 
     

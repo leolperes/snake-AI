@@ -8,13 +8,6 @@ pygame.init()
 font = pygame.font.Font('arial.ttf', 25)
 #font = pygame.font.SysFont('arial', 25)
 
-# reset Function
-# reward
-# play(Action) -> direction
-# game_iteration
-# is_colision
-
-
 class Direction(Enum):
     RIGHT = 1
     LEFT = 2
@@ -32,7 +25,7 @@ BLUE2 = (0, 50, 255)
 BLACK = (0, 0, 0)
 
 BLOCK_SIZE = 20
-SPEED = 50
+SPEED = 40
 
 class SnakeGameAI:
     def __init__(self, w=640, h=480):
